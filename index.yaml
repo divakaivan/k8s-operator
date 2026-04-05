@@ -1,0 +1,19 @@
+apiVersion: v1
+entries:
+  ec2instance-k8s-operator:
+  - annotations:
+      kubebuilder.io/generated-by: kubebuilder
+    apiVersion: v2
+    appVersion: 0.2.0
+    created: "2026-04-05T21:47:11.23633814Z"
+    description: A Helm chart to distribute ec2instance-k8s-operator
+    digest: 522e967705e8f3ee03c9331f87dbdc10ec68c8dc2afd039ab52f8bd0d56d55d9
+    keywords:
+    - kubernetes
+    - operator
+    name: ec2instance-k8s-operator
+    type: application
+    urls:
+    - https://github.com/divakaivan/ec2instance-k8s-operator/releases/download/ec2instance-k8s-operator-0.2.0/ec2instance-k8s-operator-0.2.0.tgz
+    version: 0.2.0
+generated: "2026-04-05T21:47:11.23634317Z"
