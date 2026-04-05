@@ -1,10 +1,10 @@
 apiVersion: v2
-name: k8s-operator
-description: A Helm chart to distribute k8s-operator
+name: ec2instance-k8s-operator
+description: A Helm chart to distribute ec2instance-k8s-operator
 type: application
 
-version: 0.1.0
-appVersion: "0.1.0"
+version: 0.2.0
+appVersion: "0.2.0"
 
 keywords:
   - kubernetes

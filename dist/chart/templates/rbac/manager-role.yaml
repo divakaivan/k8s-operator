@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "k8s-operator.resourceName" (dict "suffix" "manager-role" "context" $) }}
+  name: {{ include "ec2instance-k8s-operator.resourceName" (dict "suffix" "manager-role" "context" $) }}
 rules:
 - apiGroups:
   - compute.cloud.com
