@@ -24,43 +24,11 @@ The operator requires AWS credentials (`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCES
 
 ### Option 1 — kubectl
 
-**1. Deploy the operator:**
-
 ```sh
 kubectl apply -f https://raw.githubusercontent.com/divakaivan/ec2instance-k8s-operator/main/dist/install.yaml
 ```
 
-**2. Create a Secret with your AWS credentials:**
-
-```sh
-kubectl create secret generic aws-credentials \
-  --from-literal=AWS_ACCESS_KEY_ID=<your-access-key-id> \
-  --from-literal=AWS_SECRET_ACCESS_KEY=<your-secret-access-key> \
-  -n ec2instance-k8s-operator-system
-```
-
-**3. Mount the Secret into the manager deployment:**
-
-```sh
-kubectl patch deployment ec2instance-k8s-operator-controller-manager \
-  -n ec2instance-k8s-operator-system \
-  --type=json \
-  -p='[{"op":"add","path":"/spec/template/spec/containers/0/envFrom","value":[{"secretRef":{"name":"aws-credentials"}}]}]'
-```
-
 ### Option 2 — Helm
-
-**1. Create a Secret with your AWS credentials:**
-
-```sh
-kubectl create namespace ec2instance-k8s-operator-system
-kubectl create secret generic aws-credentials \
-  --from-literal=AWS_ACCESS_KEY_ID=<your-access-key-id> \
-  --from-literal=AWS_SECRET_ACCESS_KEY=<your-secret-access-key> \
-  -n ec2instance-k8s-operator-system
-```
-
-**2. Install the chart:**
 
 ```sh
 helm install ec2instance-k8s-operator ./dist/chart \
