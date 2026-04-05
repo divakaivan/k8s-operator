@@ -31,8 +31,11 @@ kubectl apply -f https://raw.githubusercontent.com/divakaivan/ec2instance-k8s-op
 ### Option 2 — Helm
 
 ```sh
-helm install ec2instance-k8s-operator ./dist/chart
+helm repo add ec2instance-k8s-operator https://divakaivan.github.io/ec2instance-k8s-operator
+helm install my-release ec2instance-k8s-operator/ec2instance-k8s-operator
 ```
+
+Check everything is running...
 
 ## Usage
 
