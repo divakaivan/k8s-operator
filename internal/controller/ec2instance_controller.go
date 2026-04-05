@@ -52,7 +52,7 @@ func (r *EC2InstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	l := log.FromContext(ctx)
 
 	// TODO(user): your logic here
-	l.Info("=== RECONCILE LOOP STARTED ===", "namespace", req.Namespace, "name", req.Name)
+	l.Info("Reconciling EC2Instance", "namespace", req.Namespace, "name", req.Name)
 
 	ec2Instance := &computev1.EC2Instance{}
 	if err := r.Get(ctx, req.NamespacedName, ec2Instance); err != nil {
@@ -66,7 +66,7 @@ func (r *EC2InstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 	// check if deleteionTimestamp is not zero
 	if !ec2Instance.DeletionTimestamp.IsZero() {
-		l.Info("Has deleteionTimestamp, Instance is being deleted")
+		l.Info("Instance is being deleted")
 		_, err := deleteEc2Instance(ctx, ec2Instance)
 		if err != nil {
 			l.Error(err, "Failed to delete EC2 instance")
@@ -94,16 +94,11 @@ func (r *EC2InstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	l.Info("Creating new instance")
 	ec2Instance.Finalizers = append(ec2Instance.Finalizers, "ec2instance.compute.cloud.com")
 	if err := r.Update(ctx, ec2Instance); err != nil {
-		// r.Update will trigger the Reconcile function
 		l.Error(err, "Failed to add finalizer")
 		// k8s will retry with backoff
-		return ctrl.Result{
-			Requeue: true,
-		}, err
+		return ctrl.Result{Requeue: true}, err
 	}
-	l.Info("=== FINALIZER ADDED - This update will trigger a new reconcile loop but current reconcile continues")
 
-	l.Info("=== CONTINUING WITH EC2 INSTANCE CREATION IN CURRENT RECONCILE ===")
 	createdInstanceInfo, err := createEC2Instance(ec2Instance)
 	if err != nil {
 		l.Error(err, "Failed to create EC2 instance")
@@ -111,8 +106,8 @@ func (r *EC2InstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		return ctrl.Result{}, err
 	}
 
-	l.Info("=== ABOUT TO UPDATE STATUS - This will trigger reconcile loop again ===",
-		"InstanceID", createdInstanceInfo.InstanceID,
+	l.Info("Updating instance status",
+		"instanceID", createdInstanceInfo.InstanceID,
 		"state", createdInstanceInfo.State)
 
 	ec2Instance.Status.InstanceID = createdInstanceInfo.InstanceID
@@ -122,13 +117,12 @@ func (r *EC2InstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	ec2Instance.Status.PublicDNS = createdInstanceInfo.PublicDNS
 	ec2Instance.Status.PrivateDNS = createdInstanceInfo.PrivateDNS
 
-	// ctrl.Result{} with nill error means recon was successful and no requeue is requested
 	err = r.Status().Update(ctx, ec2Instance)
 	if err != nil {
 		l.Error(err, "Failed to update status")
 		return ctrl.Result{}, err
 	}
-	l.Info("=== STATUS UPDATED - Reconcile loop will be triggered again ===")
+	l.Info("Instance status updated", "instanceID", createdInstanceInfo.InstanceID)
 
 	return ctrl.Result{}, nil
 }

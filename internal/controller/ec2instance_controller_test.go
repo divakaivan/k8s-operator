@@ -51,9 +51,12 @@ var _ = Describe("EC2Instance Controller", func() {
 						Name:      resourceName,
 						Namespace: "default",
 					},
-					// TODO(user): Specify other spec details if needed.
 				}
 				Expect(k8sClient.Create(ctx, resource)).To(Succeed())
+
+				By("setting a pre-existing InstanceID in status to avoid real AWS calls")
+				resource.Status.InstanceID = "i-test-existing"
+				Expect(k8sClient.Status().Update(ctx, resource)).To(Succeed())
 			}
 		})
 

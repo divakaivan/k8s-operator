@@ -46,7 +46,6 @@ var (
 )
 
 func init() {
-	// scheme (empty book) > AddToScheme(built-in types/k8s types) > AddToScheme(custom types/ec2instance) > complete registry(full catalog)
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
 	utilruntime.Must(computev1.AddToScheme(scheme))
