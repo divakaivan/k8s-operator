@@ -84,6 +84,7 @@ jobs:
         with:
           context: .
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: timee98642/ec2instance-k8s-operator:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -119,17 +120,6 @@ jobs:
 
       - name: Install Helm
         uses: azure/setup-helm@v4
-
-      - name: Ensure gh-pages branch exists
-        run: |
-          if ! git ls-remote --exit-code --heads origin gh-pages; then
-            CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-            git checkout --orphan gh-pages
-            git rm -rf .
-            git commit --allow-empty -m "Initial gh-pages branch"
-            git push origin gh-pages
-            git checkout "$CURRENT_BRANCH"
-          fi
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
