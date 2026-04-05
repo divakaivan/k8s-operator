@@ -145,11 +145,12 @@ jobs:
       - name: Ensure gh-pages branch exists
         run: |
           if ! git ls-remote --exit-code --heads origin gh-pages; then
+            CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
             git checkout --orphan gh-pages
             git rm -rf .
             git commit --allow-empty -m "Initial gh-pages branch"
             git push origin gh-pages
-            git checkout main
+            git checkout "$CURRENT_BRANCH"
           fi
 
       - name: Run chart-releaser
