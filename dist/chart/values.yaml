@@ -12,7 +12,7 @@ manager:
   replicas: 1
 
   image:
-    repository: divakaivan/ec2instance-k8s-operator
+    repository: timee98642/ec2instance-k8s-operator
     tag: latest
     pullPolicy: IfNotPresent
 
