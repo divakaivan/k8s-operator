@@ -24,4 +24,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: divakaivan/ec2instance-k8s-operator:latest
+          tags: timee98642/ec2instance-k8s-operator:latest
