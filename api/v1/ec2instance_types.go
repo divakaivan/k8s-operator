@@ -30,19 +30,37 @@ type EC2InstanceSpec struct {
 	// The following markers will use OpenAPI v3 schema to validate the value
 	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
 
-	AmiID             string            `json:"amiId"`
-	SshKey            string            `json:"sshKey"`
 	InstanceType      string            `json:"instanceType"`
-	Subnet            string            `json:"subnet"`
+	AMIId             string            `json:"amiId"`
+	Region            string            `json:"region"`
+	AvailabilityZone  string            `json:"availabilityZone,omitempty"`
+	KeyPair           string            `json:"keyPair,omitempty"`
+	SecurityGroups    []string          `json:"securityGroups,omitempty"`
+	Subnet            string            `json:"subnet,omitempty"`
+	UserData          string            `json:"userData,omitempty"`
 	Tags              map[string]string `json:"tags,omitempty"`
-	Storage           StorageConfig     `json:"storage"`
-	AdditionalStorage []StorageConfig   `json:"additionalStorage,omitempty"`
-	InstanceName      string            `json:"instanceName"`
+	Storage           StorageConfig     `json:"storage,omitempty"`
+	AssociatePublicIP bool              `json:"associatePublicIP,omitempty"`
 }
 
 type StorageConfig struct {
-	Size int    `json:"size"`
-	Type string `json:"type"`
+	RootVolume       VolumeConfig   `json:"rootVolume,omitempty"`
+	AdditionalVolume []VolumeConfig `json:"additionalVolumes,omitempty"`
+}
+
+type VolumeConfig struct {
+	Size       int32  `json:"size"`
+	Type       string `json:"type,omitempty"`
+	DeviceName string `json:"deviceName,omitempty"`
+	Encrypted  bool   `json:"encrypted,omitempty"`
+}
+
+type Condition struct {
+	Type               string      `json:"type"`
+	Status             string      `json:"status"`
+	LastTransitionTime metav1.Time `json:"lastTransitionTime"`
+	Reason             string      `json:"reason,omitempty"`
+	Message            string      `json:"message,omitempty"`
 }
 
 // EC2InstanceStatus defines the observed state of EC2Instance.
@@ -62,9 +80,13 @@ type EC2InstanceStatus struct {
 	// - "Degraded": the resource failed to reach or maintain its desired state
 	//
 	// The status of each condition is one of True, False, or Unknown.
-	Phase      string `json:"phase,omitempty"`
-	InstanceID string `json:"instanceID,omitempty"`
-	PublicIP   string `json:"publicIP,omitempty"`
+	InstanceID string       `json:"instanceId,omitempty"`
+	State      string       `json:"state,omitempty"`
+	PublicIP   string       `json:"publicIP,omitempty"`
+	PrivateIP  string       `json:"privateIP,omitempty"`
+	PublicDNS  string       `json:"publicDNS,omitempty"`
+	PrivateDNS string       `json:"privateDNS,omitempty"`
+	LaunchTime *metav1.Time `json:"launchTime,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -94,6 +116,15 @@ type EC2InstanceList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []EC2Instance `json:"items"`
+}
+
+type CreatedInstanceInfo struct {
+	InstanceID string `json:"instanceId"`
+	PublicIP   string `json:"publicIP"`
+	PrivateIP  string `json:"privateIP"`
+	PublicDNS  string `json:"publicDNS"`
+	PrivateDNS string `json:"privateDNS"`
+	State      string `json:"state"`
 }
 
 func init() {
