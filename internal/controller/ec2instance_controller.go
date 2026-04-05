@@ -63,26 +63,26 @@ func (r *EC2InstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		return ctrl.Result{}, err
 	}
 
-	// // check if deleteionTimestamp is not zero
-	// if !ec2Instance.DeletionTimestamp.IsZero() {
-	// 	l.Info("Has deleteionTimestamp, Instance is being deleted")
-	// 	_, err := deleteEc2Instance(ctx, ec2Instance)
-	// 	if err != nil {
-	// 		l.Error(err, "Failed to delete EC2 instance")
-	// 		// k8s will retry with backoff
-	// 		return ctrl.Result{Requeue: true}, err
-	// 	}
-	//
-	// 	// remove the finalizer
-	// 	controllerutil.RemoveFinalizer(ec2Instance, "ec2instance.compute.cloud.com")
-	// 	if err := r.Update(ctx, ec2Instance); err != nil {
-	// 		l.Error(err, "Failed to remove finalizer")
-	// 		// k8s will retry with backoff
-	// 		return ctrl.Result{Requeue: true}, err
-	// 	}
-	// 	// at this point the instance state is terminated and the finalizer is removed
-	// 	return ctrl.Result{}, nil
-	// }
+	// check if deleteionTimestamp is not zero
+	if !ec2Instance.DeletionTimestamp.IsZero() {
+		l.Info("Has deleteionTimestamp, Instance is being deleted")
+		_, err := deleteEc2Instance(ctx, ec2Instance)
+		if err != nil {
+			l.Error(err, "Failed to delete EC2 instance")
+			// k8s will retry with backoff
+			return ctrl.Result{Requeue: true}, err
+		}
+
+		// remove the finalizer
+		controllerutil.RemoveFinalizer(ec2Instance, "ec2instance.compute.cloud.com")
+		if err := r.Update(ctx, ec2Instance); err != nil {
+			l.Error(err, "Failed to remove finalizer")
+			// k8s will retry with backoff
+			return ctrl.Result{Requeue: true}, err
+		}
+		// at this point the instance state is terminated and the finalizer is removed
+		return ctrl.Result{}, nil
+	}
 
 	// check if we already have an instance ID in status
 	if ec2Instance.Status.InstanceID != "" {
