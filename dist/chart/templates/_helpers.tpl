@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "k8s-operator.name" -}}
+{{- define "ec2instance-k8s-operator.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "k8s-operator.fullname" -}}
+{{- define "ec2instance-k8s-operator.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -27,7 +27,7 @@ If release name contains chart name it will be used as a full name.
 Namespace for generated references.
 Always uses the Helm release namespace.
 */}}
-{{- define "k8s-operator.namespaceName" -}}
+{{- define "ec2instance-k8s-operator.namespaceName" -}}
 {{- .Release.Namespace }}
 {{- end }}
 
@@ -38,8 +38,8 @@ Takes a dict with:
   - .context: Template context (root context with .Values, .Release, etc.)
 Dynamically calculates safe truncation to ensure total name length <= 63 chars.
 */}}
-{{- define "k8s-operator.resourceName" -}}
-{{- $fullname := include "k8s-operator.fullname" .context }}
+{{- define "ec2instance-k8s-operator.resourceName" -}}
+{{- $fullname := include "ec2instance-k8s-operator.fullname" .context }}
 {{- $suffix := .suffix }}
 {{- $maxLen := sub 62 (len $suffix) | int }}
 {{- if gt (len $fullname) $maxLen }}

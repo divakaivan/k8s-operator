@@ -259,9 +259,9 @@ endef
 ## Helm binary to use for deploying the chart
 HELM ?= helm
 ## Namespace to deploy the Helm release
-HELM_NAMESPACE ?= k8s-operator-system
+HELM_NAMESPACE ?= ec2instance-k8s-operator-system
 ## Name of the Helm release
-HELM_RELEASE ?= k8s-operator
+HELM_RELEASE ?= ec2instance-k8s-operator
 ## Path to the Helm chart directory
 HELM_CHART_DIR ?= dist/chart
 ## Additional arguments to pass to helm commands

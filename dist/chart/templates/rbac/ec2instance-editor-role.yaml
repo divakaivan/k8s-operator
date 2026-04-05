@@ -4,10 +4,10 @@ kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/name: {{ include "k8s-operator.name" . }}
+    app.kubernetes.io/name: {{ include "ec2instance-k8s-operator.name" . }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-  name: {{ include "k8s-operator.resourceName" (dict "suffix" "ec2instance-editor-role" "context" $) }}
+  name: {{ include "ec2instance-k8s-operator.resourceName" (dict "suffix" "ec2instance-editor-role" "context" $) }}
 rules:
 - apiGroups:
   - compute.cloud.com
