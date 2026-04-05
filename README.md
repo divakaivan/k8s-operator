@@ -31,9 +31,7 @@ kubectl apply -f https://raw.githubusercontent.com/divakaivan/ec2instance-k8s-op
 ### Option 2 — Helm
 
 ```sh
-helm install ec2instance-k8s-operator ./dist/chart \
-  --namespace ec2instance-k8s-operator-system \
-  --set manager.envFrom[0].secretRef.name=aws-credentials
+helm install ec2instance-k8s-operator ./dist/chart
 ```
 
 ## Usage
